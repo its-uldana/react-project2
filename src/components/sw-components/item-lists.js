@@ -1,54 +1,35 @@
 import React from 'react';
-import ItemDetails, {Record} from "../item-details/item-details";
+import ItemList from "../item-list";
+import {withData} from "../hoc-helpers";
 import SwapiService from "../../services/swapi-service";
+
 const {
-    getPerson,
-    getStarship,
-    getPlanet,
-    getPersonImage,
-    getStarshipImage,
-    getPlanetImage,
+    getAllPeople,
+    getAllStarships,
+    getAllPlanets,
 } = new SwapiService();
-const PersonDetails = ({ itemId }) => {
-    return (
-        <ItemDetails
-            itemId={itemId}
-            getData={getPerson}
-            getImageUrl={getPersonImage}
-        >
-            <Record field="gender" label="Gender"/>
-            <Record field="eyeColor" label="Eye Color"/>
-        </ItemDetails>
-    )
+
+
+const withChildFunction = (Wrapped, fn) => {
+    return (props) => {
+        return (
+            <Wrapped {...props}>
+                {fn}
+            </Wrapped>
+        )
+    }
 };
-const StarshipDetails = ({ itemId }) => {
-    return (
-        <ItemDetails
-            itemId={itemId}
-            getData={getStarship}
-            getImageUrl={getStarshipImage}
-        >
-            <Record field="model" label="Model"/>
-            <Record field="length" label="Length"/>
-            <Record field="costInCredits" label="Cost"/>
-        </ItemDetails>
-    )
-};
-const PlanetDetails = ({ itemId }) => {
-    return (
-        <ItemDetails
-            itemId={itemId}
-            getData={getPlanet}
-            getImageUrl={getPlanetImage}
-        >
-            <Record field="population" label="Population"/>
-            <Record field="rotationPeriod" label="Rotation period"/>
-            <Record field="diameter" label="Diameter"/>
-        </ItemDetails>
-    )
-};
+
+
+const renderName = ({name}) => <span>{name}</span>;
+const renderModelAndName = ({model, name}) => <span>{name} ({model})</span>;
+
+const PersonList = withData(  withChildFunction(ItemList, renderName), getAllPeople  );
+const PlanetList = withData(  withChildFunction(ItemList, renderName), getAllPlanets  );
+const StarshipList = withData(  withChildFunction(ItemList, renderModelAndName), getAllStarships  );
+
 export {
-    PersonDetails,
-    StarshipDetails,
-    PlanetDetails
+    PersonList,
+    PlanetList,
+    StarshipList
 }
