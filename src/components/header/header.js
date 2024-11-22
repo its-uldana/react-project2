@@ -2,7 +2,7 @@ import React from 'react';
 
 import './header.css';
 
-const Header = () => {
+const Header = ({onServiceChange}) => {
     return (
         <div className="header d-flex">
             <h3>
